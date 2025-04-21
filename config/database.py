@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from config.settings import settings
 
@@ -14,3 +14,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+class Base(DeclarativeBase):
+    pass
