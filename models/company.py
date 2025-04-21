@@ -1,21 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import ForeignKey, Index, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from config.database import Base
-from models.tag import Tag
+from config.database import Base, CommonMixin
 
 
-class Company(Base):
-    __tablename__ = "company"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.utcnow, onupdate=datetime.utcnow
-    )
-
+class Company(Base, CommonMixin):
     name: Mapped[list["CompanyName"]] = relationship(
         back_populates="company", cascade="all, delete"
     )
@@ -24,11 +13,9 @@ class Company(Base):
     )
 
 
-class CompanyName(Base):
-    __tablename__ = "company_name"
+class CompanyName(Base, CommonMixin):
     __table_args__ = (Index("ix_company_name_lang_name", "lang", "name"),)
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     company_id: Mapped[int] = mapped_column(
         ForeignKey("company.id", ondelete="CASCADE"), nullable=False
     )
@@ -38,10 +25,7 @@ class CompanyName(Base):
     company: Mapped["Company"] = relationship(back_populates="name")
 
 
-class CompanyTag(Base):
-    __tablename__ = "company_tag"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
+class CompanyTag(Base, CommonMixin):
     company_id: Mapped[int] = mapped_column(
         ForeignKey("company.id", ondelete="CASCADE"), index=True
     )
@@ -50,4 +34,4 @@ class CompanyTag(Base):
     )
 
     company: Mapped["Company"] = relationship(back_populates="tag")
-    tag: Mapped["Tag"] = relationship(back_populates="company")
+    tag: Mapped["Tag"] = relationship(back_populates="company")  # noqa: F821
