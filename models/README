@@ -1,0 +1,19 @@
+Generic single-database configuration.
+
+## 마이그레이션 생성
+
+```shell
+alembic revision --autogenerate -m {마이그레이션 명}
+```
+
+## 마이그레이션 실행
+
+```shell
+alembic upgrade head
+```
+
+## 마이그레이션 버전 변경
+
+```shell
+alembic upgrade/downgrade revisionID # 해당 revision ID로 upgrade/downgrade
+```
