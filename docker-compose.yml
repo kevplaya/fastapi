@@ -20,5 +20,3 @@ services:
       - mysql
     ports:
       - 8000:8000
-    environment:
-      - POETRY_VIRTUALENVS_CREATE=false

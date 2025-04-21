@@ -10,13 +10,14 @@ RUN apt-get install default-mysql-client -y
 
 # Poetry 설치
 RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV POETRY_VIRTUALENVS_CREATE=false
 ENV PATH="/root/.local/bin:$PATH"
-    
+
 WORKDIR /wanted
-    
+
 COPY pyproject.toml poetry.lock* ./
 RUN poetry install --no-root
 
 COPY . .
 
-CMD ["poetry", "run", "gunicorn", "main:app", "--workers=4", "--worker-class=uvicorn.workers.UvicornWorker", "--bind=0.0.0.0:8000"]
+CMD ["gunicorn", "main:app", "--workers=4", "--worker-class=uvicorn.workers.UvicornWorker", "--bind=0.0.0.0:8000"]
