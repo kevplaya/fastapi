@@ -20,6 +20,6 @@ class TagName(Base, CommonMixin):
         ForeignKey("tag.id", ondelete="CASCADE"), nullable=False
     )
     lang: Mapped[str] = mapped_column(String(5), nullable=False)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     tag: Mapped["Tag"] = relationship(back_populates="name")

@@ -20,7 +20,7 @@ class CompanyName(Base, CommonMixin):
         ForeignKey("company.id", ondelete="CASCADE"), nullable=False
     )
     lang: Mapped[str] = mapped_column(String(5), nullable=False)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     company: Mapped["Company"] = relationship(back_populates="name")
 
