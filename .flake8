@@ -1,0 +1,5 @@
+[flake8]
+import-order-style=pycharm
+ignore=E203, E266, E501, W503, F403
+max-line-length = 200
+max-complexity=11
