@@ -1,13 +1,12 @@
 from sqlalchemy import desc, select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import Session, selectinload
 
 from models.company import Company, CompanyName
 from models.tag import Tag
 
 
 class CompanyRepository:
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: Session):
         self.session = session
 
     def autocomplete_company_name(self, keyword: str, lang: str) -> list[str]:

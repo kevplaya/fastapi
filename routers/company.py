@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from config.database import get_db
 from repositories.company_repository import CompanyRepository
@@ -8,7 +8,7 @@ from services.company_service import CompanyService
 CompanyRouter = APIRouter()
 
 
-def get_company_service(session: AsyncSession = Depends(get_db)):
+def get_company_service(session: Session = Depends(get_db)):
     repository = CompanyRepository(session)
     return CompanyService(repository)
 
@@ -23,7 +23,7 @@ def autocomplete_company_name(
 
 
 @CompanyRouter.get("/companies/{query}")
-async def search_company(
+def search_company(
     query: str, x_wanted_language: str = Header(...), service: CompanyService = Depends(get_company_service)
 ):
     results = service.search_companies_by_name(query, x_wanted_language)
