@@ -9,6 +9,7 @@ ENV_PATH = BASE_DIR.parent / ".env"
 
 class Settings(BaseSettings):
     database_url: str
+    debug: bool = True
     model_config = SettingsConfigDict(env_file=ENV_PATH)
 
 

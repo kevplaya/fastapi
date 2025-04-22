@@ -37,9 +37,6 @@ def test_company_search(api: TestClient):
     assert resp.status_code == 200
     assert company == {"company_name": "지오코리아(페루관광청)", "tags": ["태그_28", "태그_17"]}
 
-
-def test_company_search_on_not_found_case(api: TestClient):
-    """하나의 테스트 세션에서 실행되어 async_session 이 정상적으로 종료되지않아 분리합니다."""
     # 검색된 회사가 없는경우 404를 리턴합니다.
     resp = api.get("/companies/없는회사", headers=[("x-wanted-language", "ko")])
     assert resp.status_code == 404

@@ -1,21 +1,20 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
+from sqlalchemy import DateTime, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, sessionmaker
 
 from config.settings import settings
 
-async_engine = create_async_engine(settings.database_url, echo=settings.debug)
-AsyncSessionFactory = async_sessionmaker(bind=async_engine, expire_on_commit=False)
+engine = create_engine(settings.database_url)
+SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-async def get_async_db():
-    async_session = AsyncSessionFactory()
+def get_db():
+    session = SessionFactory()
     try:
-        yield async_session
+        yield session
     finally:
-        await async_session.close()
+        session.close()
 
 
 class Base(DeclarativeBase):

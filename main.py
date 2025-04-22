@@ -1,8 +1,8 @@
 from fastapi import Depends, FastAPI
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
-from config.database import get_async_db
+from config.database import get_db
 from routers.company import CompanyRouter
 
 app = FastAPI()
@@ -12,7 +12,7 @@ app.include_router(
 
 
 @app.get("/ping")
-async def ping(db: AsyncSession = Depends(get_async_db)):
-    result = await db.execute(text("SELECT 1"))
+def ping(db: Session = Depends(get_db)):
+    result = db.execute(text("SELECT 1"))
     scalar_value = result.scalar()
     return {"message": bool(scalar_value)}

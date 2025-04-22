@@ -10,7 +10,7 @@ class CompanyRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def autocomplete_company_name(self, keyword: str, lang: str) -> list[str]:
+    def autocomplete_company_name(self, keyword: str, lang: str) -> list[str]:
         stmt = (
             select(CompanyName.name)
             .join(Company)
@@ -18,15 +18,15 @@ class CompanyRepository:
             .where(CompanyName.name.like(f"%{keyword}%"))
             .order_by(desc(CompanyName.name))
         )
-        result = await self.session.execute(stmt)
+        result = self.session.execute(stmt)
         return [row[0] for row in result.fetchall()]
 
-    async def search_company_by_name(self, keyword: str) -> list[Company]:
+    def search_company_by_name(self, keyword: str) -> list[Company]:
         stmt = (
             select(Company)
             .options(selectinload(Company.names), selectinload(Company.tags).selectinload(Tag.names))
             .join(CompanyName)
             .where(CompanyName.name == keyword)
         )
-        result = await self.session.execute(stmt)
+        result = self.session.execute(stmt)
         return result.scalars().first()
