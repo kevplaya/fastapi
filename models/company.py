@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy import ForeignKey, Index, String
+from sqlalchemy import ForeignKey, Index, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from config.database import Base, CommonMixin
@@ -26,7 +26,10 @@ class Company(Base, CommonMixin):
 
 
 class CompanyName(Base, CommonMixin):
-    __table_args__ = (Index("ix_company_name_lang_name", "lang", "name"),)
+    __table_args__ = (
+        Index("ix_company_name_lang_name", "lang", "name"),
+        UniqueConstraint("company_id", "lang", "name", name="uq_company_lang_name_pair"),
+    )
 
     company_id: Mapped[int] = mapped_column(ForeignKey("company.id", ondelete="CASCADE"), nullable=False)
     lang: Mapped[str] = mapped_column(String(5), nullable=False)
@@ -36,6 +39,7 @@ class CompanyName(Base, CommonMixin):
 
 
 class CompanyTag(Base, CommonMixin):
+    __table_args__ = (UniqueConstraint("company_id", "tag_id", name="uq_company_tag_pair"),)
     company_id: Mapped[int] = mapped_column(ForeignKey("company.id", ondelete="CASCADE"), index=True)
     tag_id: Mapped[int] = mapped_column(ForeignKey("tag.id", ondelete="CASCADE"), index=True)
 
