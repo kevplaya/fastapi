@@ -94,7 +94,7 @@ def test_new_company(api):
     }
 
 
-def test_search_tag_name(api):
+def test_search_tag_name(api: TestClient):
     """
     4.  태그명으로 회사 검색
     태그로 검색 관련된 회사가 검색되어야 합니다.
@@ -104,7 +104,7 @@ def test_search_tag_name(api):
     동일한 회사는 한번만 노출이 되어야합니다.
     """
     resp = api.get("/tags?query=タグ_22", headers=[("x-wanted-language", "ko")])
-    searched_companies = json.loads(resp.data.decode("utf-8"))
+    searched_companies = json.loads(resp.content.decode("utf-8"))
 
     assert [company["company_name"] for company in searched_companies] == [
         "딤딤섬 대구점",

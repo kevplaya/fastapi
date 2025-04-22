@@ -1,7 +1,12 @@
+from pydantic import BaseModel
 from sqlalchemy import ForeignKey, Index, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from config.database import Base, CommonMixin
+
+
+class CompanySearchResponse(BaseModel):
+    company_name: str
 
 
 class Company(Base, CommonMixin):

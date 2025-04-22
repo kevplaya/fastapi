@@ -2,7 +2,7 @@ from sqlalchemy import desc, select
 from sqlalchemy.orm import Session, selectinload
 
 from models.company import Company, CompanyName
-from models.tag import Tag
+from models.tag import Tag, TagName
 
 
 class CompanyRepository:
@@ -29,3 +29,14 @@ class CompanyRepository:
         )
         result = self.session.execute(stmt)
         return result.scalars().first()
+
+    def search_companies_by_tag_name(self, tag_keyword: str, lang: str) -> list[Company]:
+        stmt = (
+            select(Company)
+            .join(Company.tags)
+            .join(Tag.names)
+            .where(TagName.name == tag_keyword)
+            .options(selectinload(Company.names), selectinload(Company.tags))
+        )
+        result = self.session.execute(stmt).scalars().unique().all()
+        return result
