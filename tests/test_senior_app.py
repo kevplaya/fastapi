@@ -1,13 +1,14 @@
 import json
 
 import pytest
+from fastapi.testclient import TestClient
 
 from main import app
 
 
 @pytest.fixture
 def api():
-    return app.test_client()
+    return TestClient(app)
 
 
 def test_company_name_autocomplete(api):
@@ -17,7 +18,7 @@ def test_company_name_autocomplete(api):
     header의 x-wanted-language 언어값에 따라 해당 언어로 출력되어야 합니다.
     """
     resp = api.get("/search?query=링크", headers=[("x-wanted-language", "ko")])
-    searched_companies = json.loads(resp.data.decode("utf-8"))
+    searched_companies = json.loads(resp.content.decode("utf-8"))
 
     assert resp.status_code == 200
     assert searched_companies == [
