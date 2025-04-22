@@ -1,9 +1,18 @@
 Generic single-database configuration.
 
+## 초기 데이터 적재
+1. extract_tags.py 실행하여 resources 에 [text](scripts/resources/grouped_tags.csv) 생성
+2. load_company_tags.py 실행
+```shell
+cd models/scripts
+PYTHONPATH={path_to_your_project} python -m load_company_tags
+```
+
+
 ## 마이그레이션 생성
 
 ```shell
-alembic revision --autogenerate -m {마이그레이션 명}
+alembic revision --autogenerate -m {마이그레이션명}
 ```
 
 ## 마이그레이션 실행

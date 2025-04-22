@@ -1,21 +1,21 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, sessionmaker 
+from sqlalchemy import DateTime
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 from config.settings import settings
 
-DATABASE_URL = settings.database_url
-engine = create_engine(DATABASE_URL)
-SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+async_engine = create_async_engine(settings.database_url)
+AsyncSessionFactory = async_sessionmaker(bind=async_engine, expire_on_commit=False)
 
 
-def get_db():
-    db = SessionFactory()
+async def get_async_db():
+    async_session = AsyncSessionFactory()
     try:
-        yield db
+        yield async_session
     finally:
-        db.close()
+        await async_session.close()
 
 
 class Base(DeclarativeBase):
@@ -29,9 +29,5 @@ class CommonMixin:
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now, onupdate=datetime.now, nullable=False
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
