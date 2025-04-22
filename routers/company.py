@@ -20,3 +20,11 @@ async def autocomplete_company_name(
     service: CompanyService = Depends(get_company_service),
 ):
     return await service.get_autocomplete_company_names(query, x_wanted_language)
+
+
+@CompanyRouter.get("/companies/{query}")
+async def search_company(
+    query: str, x_wanted_language: str = Header(...), service: CompanyService = Depends(get_company_service)
+):
+    results = await service.search_companies_by_name(query, x_wanted_language)
+    return results

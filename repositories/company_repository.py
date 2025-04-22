@@ -1,7 +1,9 @@
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from models.company import Company, CompanyName
+from models.tag import Tag
 
 
 class CompanyRepository:
@@ -18,3 +20,13 @@ class CompanyRepository:
         )
         result = await self.session.execute(stmt)
         return [row[0] for row in result.fetchall()]
+
+    async def search_company_by_name(self, keyword: str) -> list[Company]:
+        stmt = (
+            select(Company)
+            .options(selectinload(Company.names), selectinload(Company.tags).selectinload(Tag.names))
+            .join(CompanyName)
+            .where(CompanyName.name == keyword)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().first()

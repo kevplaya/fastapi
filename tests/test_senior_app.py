@@ -11,7 +11,7 @@ def api():
     return TestClient(app)
 
 
-def test_company_name_autocomplete(api):
+def test_company_name_autocomplete(api: TestClient):
     """
     1. 회사명 자동완성
     회사명의 일부만 들어가도 검색이 되어야 합니다.
@@ -27,27 +27,21 @@ def test_company_name_autocomplete(api):
     ]
 
 
-def test_company_search(api):
+def test_company_search(api: TestClient):
     """
     2. 회사 이름으로 회사 검색
     header의 x-wanted-language 언어값에 따라 해당 언어로 출력되어야 합니다.
     """
-    resp = api.get("/companies/Wantedlab", headers=[("x-wanted-language", "ko")])
-
-    company = json.loads(resp.data.decode("utf-8"))
+    resp = api.get("/companies/GEOCM Co.", headers=[("x-wanted-language", "ko")])
+    company = json.loads(resp.content.decode("utf-8"))
     assert resp.status_code == 200
-    assert company == {
-        "company_name": "원티드랩",
-        "tags": [
-            "태그_4",
-            "태그_20",
-            "태그_16",
-        ],
-    }
+    assert company == {"company_name": "지오코리아(페루관광청)", "tags": ["태그_28", "태그_17"]}
 
+
+def test_company_search_on_not_found_case(api: TestClient):
+    """하나의 테스트 세션에서 실행되어 async_session 이 정상적으로 종료되지않아 분리합니다."""
     # 검색된 회사가 없는경우 404를 리턴합니다.
     resp = api.get("/companies/없는회사", headers=[("x-wanted-language", "ko")])
-
     assert resp.status_code == 404
 
 
