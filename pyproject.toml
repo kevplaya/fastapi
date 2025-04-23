@@ -16,7 +16,7 @@ exclude = '''
 '''
 
 [tool.poetry]
-name = " wanted"
+name = " fastapi-exaple"
 version = "0.1.0"
 description = "company api based on multilingual"
 authors = ["jihoon.lee"]
