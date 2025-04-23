@@ -49,7 +49,7 @@ make shell-mysql # MySQL 컨테이너 실행중 mysql shell에 접근합니다.
 ## .env 추가
 root 폴더 하단에 아래 내용을 담은 env를 추가합니다.
 ```
-DATABASE_URL=mysql+pymysql://root:root@{host_to_yourdb/container_name}:3306/wanted
+DATABASE_URL=mysql+pymysql://root:root@{host_to_yourdb/container_name}:3306/app
 ```
 
 ## Test 방법
