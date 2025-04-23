@@ -13,9 +13,9 @@ services:
 
   app:
     build: .
-    image: wanted-project
+    image: fastapi-project
     volumes:
-      - .:/wanted
+      - .:/app
     depends_on:
       - mysql
     ports:
